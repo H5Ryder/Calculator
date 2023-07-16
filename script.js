@@ -1,22 +1,16 @@
 // main.js
-import {calcMem, lowerDisplay, higherDisplay } from './storage.js';
+import {calcMem, calcDisplay } from './storage.js';
 
-calcMem.a = 2;
-calcMem.b = 0.3215;
-calcMem.op = "*";
-calcMem.operate();
+calcDisplay.lowerDisplay("0");
 
-console.log(calcMem.result);
-
-
-
-lowerDisplay(60);
-higherDisplay(70);
 
 //Constraints:
 //Limit size of number
 
 
+
+
+//BUTTONS
 //Sets buttons 0-9
 const numBtn = new Array(9);
 
@@ -29,15 +23,17 @@ for (let i = 0; i < 10; i++) {
 
   numBtn[i] = document.querySelector(itemString);
   numBtn[i].addEventListener('click', () => {
-    alert(itemString);
+
+    numberButton(i);
   });
 }
 
 //Set "."
 const dotBtn = document.querySelector("#b");
 dotBtn.addEventListener('click', () => {
-  alert(".");
+  dotButton();
 });
+
 
 
 //Set operators
@@ -52,7 +48,7 @@ for (const key in opBtn) {
   console.log(key, opBtn[key]);
 
   opBtn[key].addEventListener('click', () => {
-    alert(`${key}`);
+    opButton(key);
   });
 
 }
@@ -60,20 +56,60 @@ for (const key in opBtn) {
 //Set "="
 const equalBtn = document.querySelector("#equal");
 equalBtn.addEventListener('click', () => {
-  alert("=");
+  equalButton();
 });
 
 //Set Clear
 const clearBtn = document.querySelector("#clear");
-equalBtn.addEventListener('click', () => {
-  alert("clear");
+clearBtn.addEventListener('click', () => {
+
+  clearButton();
+  
 });
 
 //Set Delete
 const deleteBtn = document.querySelector("#delete");
-equalBtn.addEventListener('click', () => {
-  alert("delete");
+deleteBtn.addEventListener('click', () => {
+  deleteButton();
 });
+ 
 
 
 
+
+
+function numberButton(i) {
+    calcMem.addDigit(i);
+    calcDisplay.lowerDisplay(calcMem.currentInput());
+}
+
+function dotButton(){
+
+}
+
+function opButton(key) {
+  calcDisplay.op = calcMem.selectOP(key);
+  calcDisplay.higherDisplay(calcMem.lastInput());
+  calcDisplay.lowerDisplay(calcMem.currentInput());
+
+
+
+}
+
+function equalButton(){
+
+}
+
+function clearButton(){
+  calcDisplay.clear();
+  calcMem.clear();
+
+}
+
+
+function deleteButton() {
+  calcMem.removeDigit();
+  calcDisplay.lowerDisplay(calcMem.currentInput())
+
+
+}
