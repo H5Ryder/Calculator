@@ -1,5 +1,5 @@
 // main.js
-import {calcMem, calcDisplay } from './storage.js';
+import {logic, calcDisplay } from './storage.js';
 
 calcDisplay.lowerDisplay("0");
 
@@ -78,24 +78,22 @@ deleteBtn.addEventListener('click', () => {
 
 
 function numberButton(i) {
-    calcMem.addDigit(i);
-    calcDisplay.lowerDisplay(calcMem.currentInput());
-    console.log(calcMem.b);
+  logic.insert(i);
+  calcDisplay.lowerDisplay(logic.disp());
+    
 }
 
 function dotButton(){
+  logic.insert(10);
+  calcDisplay.lowerDisplay(logic.disp());
 
-  calcDisplay.lowerDisplay(calcMem.currentInput()+".");
-    
+
+ 
 
 }
 
 function opButton(key) {
-  calcDisplay.op = calcMem.selectOP(key);
-  calcDisplay.higherDisplay(calcMem.lastInput());
-  calcDisplay.lowerDisplay(calcMem.currentInput());
-
-
+ 
 
 }
 
@@ -104,15 +102,12 @@ function equalButton(){
 }
 
 function clearButton(){
-  calcDisplay.clear();
-  calcMem.clear();
 
 }
 
 
 function deleteButton() {
-  calcMem.removeDigit();
-  calcDisplay.lowerDisplay(calcMem.currentInput())
+  logic.delete();
 
 
 }
@@ -122,7 +117,6 @@ function deleteButton() {
 
 
 
-console.log(typeof calcMem.arrayToString([2,3,1,10,5,7,6,7,8]));
 
 
 

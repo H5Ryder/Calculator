@@ -1,8 +1,5 @@
 
 //DISPLAY
-
-
-
 export const calcDisplay = {
 
   lowerDisplay(num) {
@@ -26,129 +23,79 @@ export const calcDisplay = {
 };
 
 
-//MEMORY -  and Math function Caller (The brains)
-export const calcMem = {
-  //Calculator Memory Class - holds the data
-  a: 0,
-  b: undefined,
-  result: undefined,
-  op: undefined, //operator (=,-,%,*)
+//LOGIC
+export const logic = {
+  a: [],
+  b: [],
+  op: "",
 
-  operate: function () {
-    let answer =
-      this.op === "+"
-        ? add(this.a, this.b)
-        : this.op === "-"
-        ? subtract(this.a, this.b)
-        : this.op === "x"
-        ? multiply(this.a, this.b)
-        : this.op === "%"
-        ? divide(this.a, this.b)
-        : undefined;
+  insert: function(num){
 
-    this.result = roundTo(answer, 2);
-  },
+    let val = this.op === "" ? this.a : this.b;
 
-  clear: function(){
-    this.a = [];
-    this.aDecimal = 0;
-    this.b = undefined;
-    this.result = undefined;
-    this.op = undefined;
-    this.decimal = false;
+    val.length < 6 ? val.push(num) : null;
+
+    if (this.op===""){this.a=val;} else {this.b=val;}
+
+    console.log(`this is a: ${val}`);
+
 
   },
 
-  addDigit: function(num) {
+  delete: function(){
+    this.op === "" ? this.a.pop() : this.b.pop();
+    console.log(`this is a: ${this.a}`);
 
-    //If number is maxed out
-    if ((this.op === undefined && this.b > 100000) || this.a > 100000) {
-      return;
+  },
+
+  disp: function(){
+    //return this.op === "" ? arrayToString(this.a) : arrayToString(this.b);
+    console.log('hi');
+    if (this.op ==="") {
+      return arrayToString(this.a);
     }
+  }
 
-
-
-    if (this.op === undefined) {
-      this.a = this.a*10 + num;
-    } else {
-      if (this.b === undefined) { this.b = 0;}
-      this.b = this.b * 10 + num;
-    }
-  },
-
-  removeDigit: function() {
-    if (this.op === undefined) {
-      this.a = Math.floor(this.a/10);
-    } else {
-      this.b = Math.floor(this.b/10);
-    }
-  },
-
-  currentInput: function() {
-    if (this.op ===undefined ) {
-      return this.a.toString();
-    } else {
-
-      if (this.b === undefined) { return "";}
-      return this.b.toString();
-    }
-  },
-
-  lastInput: function() {
-    if (this.op === undefined) {
-      return;
-    } else {
-      return this.a.toString() + this.op;
-    }
-  },
-
-  selectOP: function(key){
-
-    this.op =
-      key.toString() === "add"
-        ? "+"
-        : key.toString() === "subtract"
-        ? "-"
-        : key.toString() === "multiply"
-        ? "x"
-        : key.toString() === "divide"
-        ? "%"
-        : undefined;
-
-  },
-
-  arrayToNum: function(arr){
-
-    //find the "00"
-    const splitPoint = arr.indexOf(10);
-    console.log(`Split point: ${splitPoint}`);
   
-    //split into integerArr and decimalArr
-    let arrInt = arr.slice(0, splitPoint);
-    console.log(`ArrInt: ${arrInt}`);
-    let arrDec = arr.slice(splitPoint+1);
-    console.log(`arrDec: ${arrDec}`);
-    //output aInt from integerArr
-    let aInt = arrInt.reduce((sum, current) => sum*10 + current, 0);
-    console.log(`aInt: ${aInt}`);
-    //output aDec from decimalArr
-    let aDec = arrDec.reduce((sum, current) => sum*10+current, 0);
-    
-    aDec = aDec*(0.1**arrDec.length);
-    aDec = roundTo(aDec,arrDec.length);
-    console.log(`aDec2 : ${aDec}`);
-    //Sum both values
-    return aInt + aDec;
-  },
 
-  arrayToString: function(arr) {
-    return this.arrayToNum(arr).toString();
+}
 
-  },
 
-};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //MATH OPERATIONS
+
+function operate(op,a,b) {
+  let answer =
+      op === "+"
+      ? add(a,b)
+      : op === "-"
+      ? subtract(a, b)
+      : op === "x"
+      ? multiply(a,b)
+      : op === "%"
+      ? divide(a,b)
+      : undefined;
+
+    result = roundTo(answer, 2);
+    return result;
+}
+
+
+
 const add = (a, b) => a + b;
 const subtract = (a, b) => a - b;
 const multiply = (a, b) => a * b;
@@ -180,9 +127,47 @@ function hasDecimal(number) {
 
 
 
+function arrayToNum(arr){
+
+  //find the "00"
+  const splitPoint = arr.indexOf(10);
+
+  if (splitPoint < 0) {
+    let aInt = arr.reduce((sum, current) => sum*10 + current, 0);
+    return aInt;
+
+  } else {
+  //split into integerArr and decimalArr
+  let arrInt = arr.slice(0, splitPoint);
+  let arrDec = arr.slice(splitPoint+1);
+  //output aInt from integerArr
+  let aInt = arrInt.reduce((sum, current) => sum*10 + current, 0);
+  //output aDec from decimalArr
+  let aDec = arrDec.reduce((sum, current) => sum*10+current, 0);
+  aDec = aDec*(0.1**arrDec.length);
+  aDec = roundTo(aDec,arrDec.length);
+  //Sum both values
+  console.log(`Output: ${aInt+aDec}`);
+
+  return (aInt + aDec);
+  }
+}
 
 
-function arrayToString(){
+function arrayToString(arr) {
 
+  const index = arr.indexOf(10)+1;
+
+  if (index === arr.length) {
+
+    return arrayToNum(arr).toString() + ".";
+
+  } else {
+
+    return arrayToNum(arr).toString();
+
+  }
+
+ 
 
 }
