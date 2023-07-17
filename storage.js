@@ -50,21 +50,28 @@ export const calcMem = {
   },
 
   clear: function(){
-    this.a = 0;
+    this.a = [];
+    this.aDecimal = 0;
     this.b = undefined;
     this.result = undefined;
     this.op = undefined;
+    this.decimal = false;
 
   },
 
   addDigit: function(num) {
+
+    //If number is maxed out
     if ((this.op === undefined && this.b > 100000) || this.a > 100000) {
       return;
     }
-  
+
+
+
     if (this.op === undefined) {
-      this.a = this.a * 10 + num;
+      this.a = this.a*10 + num;
     } else {
+      if (this.b === undefined) { this.b = 0;}
       this.b = this.b * 10 + num;
     }
   },
@@ -81,7 +88,9 @@ export const calcMem = {
     if (this.op ===undefined ) {
       return this.a.toString();
     } else {
-      return "";
+
+      if (this.b === undefined) { return "";}
+      return this.b.toString();
     }
   },
 
@@ -107,7 +116,35 @@ export const calcMem = {
         : undefined;
 
   },
+
+  arrayToNum: function(arr){
+
+    //find the "00"
+    const splitPoint = arr.indexOf(10);
+    console.log(`Split point: ${splitPoint}`);
   
+    //split into integerArr and decimalArr
+    let arrInt = arr.slice(0, splitPoint);
+    console.log(`ArrInt: ${arrInt}`);
+    let arrDec = arr.slice(splitPoint+1);
+    console.log(`arrDec: ${arrDec}`);
+    //output aInt from integerArr
+    let aInt = arrInt.reduce((sum, current) => sum*10 + current, 0);
+    console.log(`aInt: ${aInt}`);
+    //output aDec from decimalArr
+    let aDec = arrDec.reduce((sum, current) => sum*10+current, 0);
+    
+    aDec = aDec*(0.1**arrDec.length);
+    aDec = roundTo(aDec,arrDec.length);
+    console.log(`aDec2 : ${aDec}`);
+    //Sum both values
+    return aInt + aDec;
+  },
+
+  arrayToString: function(arr) {
+    return this.arrayToNum(arr).toString();
+
+  },
 
 };
 
@@ -120,4 +157,32 @@ const divide = (a, b) => a / b;
 //ROUND OPERATION - TWO DECIMAL PLACES
 function roundTo(n, place) {
   return +(Math.round(n + "e+" + place) + "e-" + place);
+}
+
+//ADD A DECIMAL NUMBER
+function addNumAfterDot(num, add) {
+  const multiplier = 10 ** getDecimalPlaces(num);
+  const wholeNum = num * multiplier * 10 + add;
+  return wholeNum / (multiplier * 10);
+}
+
+//Gives the number of decimal places in a number -> feeds into addNumAfterDot Func
+function getDecimalPlaces(num) {
+  const decimalPart = num.toString().split(".")[1];
+  return decimalPart ? decimalPart.length : 0;
+}
+
+//Checks if a number has a decimal
+function hasDecimal(number) {
+  return number.toString().includes(".");
+}
+
+
+
+
+
+
+function arrayToString(){
+
+
 }

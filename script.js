@@ -77,13 +77,16 @@ deleteBtn.addEventListener('click', () => {
 
 
 
-
 function numberButton(i) {
     calcMem.addDigit(i);
     calcDisplay.lowerDisplay(calcMem.currentInput());
+    console.log(calcMem.b);
 }
 
 function dotButton(){
+
+  calcDisplay.lowerDisplay(calcMem.currentInput()+".");
+    
 
 }
 
@@ -113,3 +116,17 @@ function deleteButton() {
 
 
 }
+
+
+
+
+
+
+console.log(typeof calcMem.arrayToString([2,3,1,10,5,7,6,7,8]));
+
+
+
+
+
+
+
